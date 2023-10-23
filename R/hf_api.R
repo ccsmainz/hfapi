@@ -12,7 +12,7 @@ hf_api = function(inputs, url, ...){
   req = POST(url, body = body, config = config)
   response = fromJSON(content(req, "text"))
   if(is.list(response) && !is.null(response$estimated_time)){
-    print("Waiting", response$estimated_time, "seconds for model to load.")
+    print(paste("Waiting", response$estimated_time, "seconds for model to load."))
     Sys.sleep(response$estimated_time)
     hf_api(inputs, url, ...)
   } else {
