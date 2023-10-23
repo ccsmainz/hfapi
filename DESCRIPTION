@@ -1,0 +1,13 @@
+Package: hfapi
+Title: Thin wrapper for the Huggingface Inference API
+Version: 0.0.0.9000
+Authors@R: 
+    person("Michael", "Scharkow", , "michael@underused.org", role = c("aut", "cre"))
+Description: Provided access to the Huggingface Inference API.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: 
+    httr,
+    jsonlite
