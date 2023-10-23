@@ -5,7 +5,7 @@ hf_api = function(inputs, url, ...){
   if (Sys.getenv("HF_API_TOKEN") != "") {
     config = add_headers(Authorization = paste("Bearer", Sys.getenv("HF_API_TOKEN")))
   } else {
-    config = ""
+    config = NULL
   }
   params = c(list(inputs = inputs), list(...))
   body = jsonlite::toJSON(c(params, hf_opts))
