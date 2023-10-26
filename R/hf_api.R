@@ -27,17 +27,27 @@ text_embeddings = function(txt, url = "https://api-inference.huggingface.co/pipe
 
 #' @export
 text_ner = function(txt, url = "https://api-inference.huggingface.co/models/dbmdz/bert-large-cased-finetuned-conll03-english"){
-  hf_api(inputs = txt, url = url)
+  res_api <- hf_api(inputs = txt, url = url)
+
+  d = res_api |>
+    map2_dfr(txt, ~ .x %>% mutate(text = .y))
+
+  return(d)
 }
 
 #' @export
 text_classification = function(txt, url = "https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english"){
-  hf_api(inputs = txt, url = url)
+  res_api  <- hf_api(inputs = txt, url = url)
+
+  d <- res_api |>
+    map_dfr(~ .x |>
+    pivot_wider(names_from = "label", values_from = "score")) |>
+    bind_cols(text = txt)
+
+  return(d)
 }
 
 #' @export
 text_zeroshot = function(txt, labels, url = "https://api-inference.huggingface.co/models/facebook/bart-large-mnli"){
   hf_api(inputs = txt, url = url, parameters = list(candidate_labels = labels))
 }
-
-
