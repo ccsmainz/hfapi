@@ -72,3 +72,9 @@ audio_classification = function(filename, url = "https://api-inference.huggingfa
   hf_api(filename = filename, url = url) %>%
     as_tibble()
 }
+
+#' @export
+image_to_text = function(filename, url = "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large"){
+  hf_api(filename = filename, url = url) %>%
+    as_tibble()
+}
