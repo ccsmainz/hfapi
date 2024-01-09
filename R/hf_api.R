@@ -10,11 +10,26 @@ hf_api = function(inputs = NULL, url = NULL, filename = NULL, ...){
 
   params = c(list(inputs = inputs), list(...))
 
-  if(!is.null(filename)){
+  # Check zst-img case
+  if(!is.null(filename) && is.character(params$parameters$candidate_labels)){
+    # Read the image and convert it to a base64 encoded string
+    image_data <- base64enc::base64encode(filename)
+
+    # Create a list with parameters and image
+    input_list <- list(
+      parameters = list(candidate_labels = params$parameters$candidate_labels),
+      image = image_data
+    )
+
+    # Convert the list to JSON
+    body <- jsonlite::toJSON(input_list, auto_unbox = T)
+
+  } else if (!is.null(filename))  {
     body = read_file_raw(filename)
   } else {
     body = jsonlite::toJSON(c(params, hf_opts))
   }
+
 
   req = POST(url, body = body, config = config)
   response = fromJSON(content(req, "text"))
@@ -58,8 +73,17 @@ text_classification = function(txt, url = "https://api-inference.huggingface.co/
 #' @export
 text_zeroshot = function(txt, labels, url = "https://api-inference.huggingface.co/models/facebook/bart-large-mnli"){
   hf_api(inputs = txt, url = url, parameters = list(candidate_labels = labels)) %>%
-    as_tibble()
+    as_tibble() %>%
+    unnest(cols = c("labels", "scores"))
 }
+
+
+#' @export
+image_zeroshot = function(filename, labels, url = "https://api-inference.huggingface.co/models/openai/clip-vit-base-patch16"){
+  hf_api(filename = filename, url = url, parameters = list(candidate_labels = labels))
+}
+
+
 
 #' @export
 image_classification = function(filename, url = "https://api-inference.huggingface.co/models/google/vit-base-patch16-224"){
