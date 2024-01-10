@@ -80,7 +80,7 @@ text_zeroshot = function(txt, labels, url = "https://api-inference.huggingface.c
 
 #' @export
 image_zeroshot = function(filename, labels, url = "https://api-inference.huggingface.co/models/openai/clip-vit-base-patch16"){
-  hf_api(filename = filename, url = url, parameters = list(candidate_labels = labels))
+  hf_api(filename = filename, url = url, parameters = list(candidate_labels = labels)) %>% as_tibble()
 }
 
 
